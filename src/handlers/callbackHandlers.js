@@ -99,7 +99,7 @@ module.exports.addExpenseAndIncomeLog = async (ctx) => {
 
             }
         } else {
-            ctx.answerCbQuery('Định dạng callback query không hợp lệ ');
+            ctx.answerCbQuery('Định dạng callback query không hợp lệ  ');
         }
 
         await ctx.deleteMessage(ctx.callbackQuery.message.message_id);
