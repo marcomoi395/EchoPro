@@ -95,7 +95,7 @@ module.exports.addExpenseAndIncomeLog = async (ctx) => {
                     ctx.reply("hahaha");
                 }
             } catch (e) {
-                ctx.reply('Errorrrr');
+                ctx.reply('Errorrrrrrr');
 
             }
         } else {
