@@ -38,7 +38,7 @@ module.exports = async (ctx, message) => {
     ctx.session.logging = false;
     const sentMessage = await ctx.reply(responseConfessionMessage());
 
-    // Xóa tin nhắn sau 30s
+    // Xóa tin nhắn sau 5p
     setTimeout(async () => {
         try {
             await ctx.deleteMessage(ctx.message.message_id);

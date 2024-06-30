@@ -30,6 +30,9 @@ bot.command("confession", middleware.auth, textHandlers.addConfession);
 
 bot.command("get_confession", middleware.auth, textHandlers.getConfession);
 
+bot.command("add", middleware.auth, textHandlers.addToDoList);
+
+
 // Handler;
 bot.on("message", middleware.auth, textHandlers.message);
 

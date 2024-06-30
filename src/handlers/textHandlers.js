@@ -7,6 +7,8 @@ const callbackHandlers = require("../handlers/callbackHandlers");
 const expenseAndIncomeService = require("../services/expenseAndIncome.service");
 const addConfessionService = require("../services/addConfession.service");
 const getConfessionService = require("../services/getConfession.service");
+const addToDoListService = require("../services/addToDoList.service");
+const notion = require("../services/notionService");
 
 // Send Message
 module.exports.message = async (ctx) => {
@@ -16,7 +18,10 @@ module.exports.message = async (ctx) => {
             await addConfessionService(ctx, message);
         } else if (regex.checkRegexExpense(message)) {
             await expenseAndIncomeService(ctx, message);
+        } else if(ctx.session.toDo){
+            await addToDoListService(ctx, message);
         } else {
+            // await notion.getTodoList()
             const sentMessage = await ctx.reply(
                 "Đang nói gì vậy mình không hiểu 😅",
             );
@@ -128,11 +133,15 @@ module.exports.addConfession = async (ctx) => {
     await ctx.deleteMessage(ctx.message.message_id);
 
     // Xóa tin nhắn khi không nhập gì trong 5p
+
     setTimeout(async () => {
-        try {
-            ctx.session.logging = false;
-            await ctx.deleteMessage(sentMessage.message_id);
-        } catch (error) {}
+        if(ctx.session.logging === true){
+            try {
+                ctx.session.logging = false;
+                await ctx.deleteMessage(sentMessage.message_id);
+            } catch (error) {}
+        }
+
     }, 300000);
 };
 
@@ -151,4 +160,26 @@ module.exports.getConfession = async (ctx) => {
             await ctx.deleteMessage(sentMessage.message_id);
         } catch (error) {}
     }, 300000);
+};
+
+module.exports.addToDoList = async (ctx) => {
+    const sentMessage = await ctx.reply("⚜️ Hey!  📅\n" +
+        "\n" +
+        "Hãy nói cho tôi một lịch trình nào đó đi, tôi sẽ giúp bạn ghi lại. ")
+
+    ctx.session.toDo = true;
+    ctx.session.sentMessageId = sentMessage.message_id;
+
+    // Xóa tin nhắn của người dùng
+    await ctx.deleteMessage(ctx.message.message_id);
+
+    // Xóa tin nhắn khi không nhập gì trong 1p
+    setTimeout(async () => {
+        if(ctx.session.toDo === true){
+            try {
+                ctx.session.toDo = false;
+                await ctx.deleteMessage(sentMessage.message_id);
+            } catch (error) {}
+        }
+    }, 60000);
 };

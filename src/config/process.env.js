@@ -6,6 +6,6 @@ module.exports = {
     botUserName: process.env.BOT_USERNAME,
     notionToken: process.env.NOTION_TOKEN,
     budgetTrackerDatabaseId: process.env.BUDGET_TRACKER_DATABASE_ID,
-
+    toDoListDatabaseId: process.env.TODO_LIST_DATABASE_ID,
 };
 
