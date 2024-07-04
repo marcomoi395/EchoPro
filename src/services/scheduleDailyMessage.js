@@ -2,6 +2,9 @@ const cron = require("node-cron");
 const formSendUser = require("../utils/formSendUser");
 const morningMessage = require("../utils/morningMessage");
 const config = require("../config/process.env");
+const middleware = require("../middleware/auth.middleware");
+const getToDoListService = require("../services/getToDoList.service");
+const getTimeUntilEndOfDay = require("../utils/getTimeUntilEndOfDay");
 
 function sendEveryAfternoon(bot) {
     cron.schedule(
@@ -123,9 +126,38 @@ function requestToSubmitConfession(bot) {
     );
 }
 
+async function sendToDoList(bot) {
+    const text = await getToDoListService();
+    cron.schedule(
+        "00 6 * * *",
+        async () => {
+            const sentMessage = await bot.telegram.sendMessage(
+                config.userId,
+                text,
+            );
+
+            setTimeout(async () => {
+                try {
+                    await bot.telegram.deleteMessage(
+                        config.userId,
+                        sentMessage.message_id,
+                    );
+                } catch (error) {
+                    console.error("Không thể xóa tin nhắn:", error);
+                }
+            }, getTimeUntilEndOfDay());
+        },
+        {
+            scheduled: true,
+            timezone: "Asia/Ho_Chi_Minh",
+        },
+    );
+}
+
 module.exports = (bot) => {
     sendEveryAfternoon(bot);
     sendEveryEvening(bot);
     sendGoodMorningWishes(bot);
     requestToSubmitConfession(bot);
+    sendToDoList(bot);
 };

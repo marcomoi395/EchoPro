@@ -8,6 +8,7 @@ const expenseAndIncomeService = require("../services/expenseAndIncome.service");
 const addConfessionService = require("../services/addConfession.service");
 const getConfessionService = require("../services/getConfession.service");
 const addToDoListService = require("../services/addToDoList.service");
+const getToDoListService = require("../services/getToDoList.service");
 const notion = require("../services/notionService");
 
 // Send Message
@@ -16,12 +17,12 @@ module.exports.message = async (ctx) => {
     try {
         if (ctx.session.logging) {
             await addConfessionService(ctx, message);
+        } else if (ctx.session.addToDoList) {
+            await addToDoListService(ctx, message);
         } else if (regex.checkRegexExpense(message)) {
             await expenseAndIncomeService(ctx, message);
-        } else if(ctx.session.toDo){
-            await addToDoListService(ctx, message);
         } else {
-            // await notion.getTodoList()
+            // await getToDoListService(ctx);
             const sentMessage = await ctx.reply(
                 "Đang nói gì vậy mình không hiểu 😅",
             );
@@ -135,13 +136,12 @@ module.exports.addConfession = async (ctx) => {
     // Xóa tin nhắn khi không nhập gì trong 5p
 
     setTimeout(async () => {
-        if(ctx.session.logging === true){
+        if (ctx.session.logging === true) {
             try {
                 ctx.session.logging = false;
                 await ctx.deleteMessage(sentMessage.message_id);
             } catch (error) {}
         }
-
     }, 300000);
 };
 
@@ -163,11 +163,13 @@ module.exports.getConfession = async (ctx) => {
 };
 
 module.exports.addToDoList = async (ctx) => {
-    const sentMessage = await ctx.reply("⚜️ Hey!  📅\n" +
-        "\n" +
-        "Hãy nói cho tôi một lịch trình nào đó đi, tôi sẽ giúp bạn ghi lại. ")
+    const sentMessage = await ctx.reply(
+        "⚜️ Hey!  📅\n" +
+            "\n" +
+            "Hãy nói cho tôi một lịch trình nào đó đi, tôi sẽ giúp bạn ghi lại. ",
+    );
 
-    ctx.session.toDo = true;
+    ctx.session.addToDoList = true;
     ctx.session.sentMessageId = sentMessage.message_id;
 
     // Xóa tin nhắn của người dùng
@@ -175,9 +177,9 @@ module.exports.addToDoList = async (ctx) => {
 
     // Xóa tin nhắn khi không nhập gì trong 1p
     setTimeout(async () => {
-        if(ctx.session.toDo === true){
+        if (ctx.session.addToDoList === true) {
             try {
-                ctx.session.toDo = false;
+                ctx.session.addToDoList = false;
                 await ctx.deleteMessage(sentMessage.message_id);
             } catch (error) {}
         }

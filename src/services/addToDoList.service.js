@@ -1,16 +1,20 @@
 const config = require("../config/process.env");
 const responseConfessionMessage = require("../utils/responseConfessionMessage");
-const notionService = require("../services/notionService")
+const notionService = require("../services/notionService");
 const extractPartForAdditionalToDoLists = require("../utils/extractPartForAdditionalToDoLists");
 
 module.exports = async (ctx, message) => {
     const dataArray = extractPartForAdditionalToDoLists(message);
+    const promises = await notionService.addToDoList(dataArray);
 
-    console.log(dataArray);
-    const promises = await notionService.addToDoList(dataArray)
+    let sentMessage;
+    if (promises) {
+        sentMessage = await ctx.reply("✨ Tuyệt, tôi đã ghi lại rồi á \n");
+    } else {
+        sentMessage = await ctx.reply("Có lỗi rồi bạn ơi 🥹");
+    }
 
-    const sentMessage = await ctx.reply("✨ Tuyệt, tôi đã ghi lại rồi á \n")
-    ctx.session.toDo = false;
+    ctx.session.addToDoList = false;
 
     // Xóa tin nhắn sau 1p
     setTimeout(async () => {

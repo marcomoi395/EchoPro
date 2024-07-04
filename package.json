@@ -19,6 +19,7 @@
     "moment": "^2.30.1",
     "mongoose": "^8.4.1",
     "moongoose": "^0.0.5",
+    "node": "^22.4.0",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.3",
     "prettier": "^3.3.2",

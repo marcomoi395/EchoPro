@@ -4,10 +4,15 @@ const config = require("./config/process.env");
 const database = require("./config/database");
 const middleware = require("./middleware/auth.middleware");
 const scheduleDailyMessage = require("./services/scheduleDailyMessage");
+const Agent = require("node:https");
 
 database.connect();
 
-global.bot = new Telegraf.Telegraf(config.tokenBot);
+global.bot = new Telegraf.Telegraf(config.tokenBot, {
+    telegram: {
+        agent: new Agent.Agent({ keepAlive: false }),
+    },
+});
 bot.use(Telegraf.session());
 
 // Schedule Daily Message
@@ -32,6 +37,7 @@ bot.command("get_confession", middleware.auth, textHandlers.getConfession);
 
 bot.command("add", middleware.auth, textHandlers.addToDoList);
 
+// bot.command("get_to_do_list", middleware.auth, textHandlers.addToDoList);
 
 // Handler;
 bot.on("message", middleware.auth, textHandlers.message);
