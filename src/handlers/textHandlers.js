@@ -10,6 +10,7 @@ const getConfessionService = require("../services/getConfession.service");
 const addToDoListService = require("../services/addToDoList.service");
 const getToDoListService = require("../services/getToDoList.service");
 const notion = require("../services/notionService");
+const googleCelendar = require("../services/googleCelendar.service");
 
 // Send Message
 module.exports.message = async (ctx) => {
@@ -22,16 +23,19 @@ module.exports.message = async (ctx) => {
         } else if (regex.checkRegexExpense(message)) {
             await expenseAndIncomeService(ctx, message);
         } else {
+            await googleCelendar.addEvents([""]);
+            // const res = await googleCelendar.getEvents();
+            // console.log(res);
             // await getToDoListService(ctx);
-            const sentMessage = await ctx.reply(
-                "Đang nói gì vậy mình không hiểu 😅",
-            );
-            setTimeout(async () => {
-                try {
-                    await ctx.deleteMessage(ctx.message.message_id);
-                    await ctx.deleteMessage(sentMessage.message_id);
-                } catch (error) {}
-            }, 5000);
+            // const sentMessage = await ctx.reply(
+            //     "Đang nói gì vậy mình không hiểu 😅",
+            // );
+            // setTimeout(async () => {
+            //     try {
+            //         await ctx.deleteMessage(ctx.message.message_id);
+            //         await ctx.deleteMessage(sentMessage.message_id);
+            //     } catch (error) {}
+            // }, 5000);
         }
     } catch (e) {
         ctx.reply("Errorrrr");

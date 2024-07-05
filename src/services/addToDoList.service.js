@@ -2,15 +2,18 @@ const config = require("../config/process.env");
 const responseConfessionMessage = require("../utils/responseConfessionMessage");
 const notionService = require("../services/notionService");
 const extractPartForAdditionalToDoLists = require("../utils/extractPartForAdditionalToDoLists");
+const googleCelendar = require("../services/googleCelendar.service");
 
 module.exports = async (ctx, message) => {
     const dataArray = extractPartForAdditionalToDoLists(message);
-    const promises = await notionService.addToDoList(dataArray);
-
+    console.log(dataArray);
     let sentMessage;
-    if (promises) {
+    try {
+        await notionService.addToDoList(dataArray);
+        await googleCelendar.addEvents(dataArray);
+
         sentMessage = await ctx.reply("✨ Tuyệt, tôi đã ghi lại rồi á \n");
-    } else {
+    } catch (e) {
         sentMessage = await ctx.reply("Có lỗi rồi bạn ơi 🥹");
     }
 
