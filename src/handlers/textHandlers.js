@@ -23,9 +23,7 @@ module.exports.message = async (ctx) => {
         } else if(ctx.session.getConfession) {
             if(message === config.passwordConfession) {
                 const text = await getConfessionService();
-                const sentMessage = await ctx.reply(text, {
-                    parse_mode: "HTML",
-                });
+                const sentMessage = await ctx.reply(text);
 
                 // Xóa tin nhắn của người dùng
                 await ctx.deleteMessage(ctx.message.message_id);
@@ -192,7 +190,6 @@ module.exports.getConfession = async (ctx) => {
     await ctx.deleteMessage(ctx.message.message_id);
 
     // Xóa tin nhắn khi không nhập gì trong 5p
-
     setTimeout(async () => {
         if (ctx.session.logging === true) {
             try {

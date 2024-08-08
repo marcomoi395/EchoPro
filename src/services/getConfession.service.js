@@ -1,6 +1,5 @@
 const Confession = require("../models/confession.model");
 const config = require("../config/process.env");
-const { writeFile } = require("fs");
 const moment = require("moment");
 
 module.exports = async () => {
@@ -25,6 +24,7 @@ module.exports = async () => {
             },
         },
     ]);
+    console.log(record);
 
     // Function to format messages
     function formatMessages(data) {
