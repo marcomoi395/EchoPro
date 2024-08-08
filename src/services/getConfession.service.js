@@ -30,29 +30,37 @@ module.exports = async () => {
     function formatMessages(data) {
         const messages = [];
 
-        data.forEach((item) => {
-            let date = moment(
-                item.date,
-                "ddd MMM DD YYYY HH:mm:ss [GMT]Z",
-            ).format("MMMM DD YYYY");
-            let time = moment(
-                item.date,
-                "ddd MMM DD YYYY HH:mm:ss [GMT]Z",
-            ).format("HH:mm");
-            if (item.title && item.content) {
-                messages.push(
-                    `<b>${date}\n\n${time} - ${item.title}</b>\n${item.content}`,
-                );
-            } else {
-                messages.push(`<b>${date}\n\n${time}</b>\n${item.content}`);
-            }
-        });
+        if(data){
+            data.forEach((item) => {
+                let date = moment(
+                    item.date,
+                    "ddd MMM DD YYYY HH:mm:ss [GMT]Z",
+                ).format("MMMM DD YYYY");
+                let time = moment(
+                    item.date,
+                    "ddd MMM DD YYYY HH:mm:ss [GMT]Z",
+                ).format("HH:mm");
+                if (item.title && item.content) {
+                    messages.push(
+                        `<b>${date}\n\n${time} - ${item.title}</b>\n${item.content}`,
+                    );
+                } else {
+                    messages.push(`<b>${date}\n\n${time}</b>\n${item.content}`);
+                }
+            });
+        }
+
 
         return messages;
     }
 
     // Get formatted messages
-    const formattedMessages = formatMessages(record[0].data);
-
-    return formattedMessages.join("\n\n————————————————\n\n");
+    if(record && record.length > 0){
+        const formattedMessages = formatMessages(record[0]?.data);
+        return formattedMessages.join("\n\n————————————————\n\n");
+    }
+    else{
+        return '🌙 Không có lời thú tội nào vào tháng này!!!'
+    }
 };
+

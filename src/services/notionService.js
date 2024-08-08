@@ -145,160 +145,160 @@ module.exports.addPageBudgetTracker = async (data) => {
     }
 };
 
-module.exports.getTodoList = async (ctx) => {
-    const databaseId = config.toDoListDatabaseId;
-    const today = new Date().toISOString().split("T")[0];
-
-    const response = await notion.databases.query({
-        database_id: databaseId,
-        filter: {
-            property: "Date",
-            date: {
-                equals: today,
-            },
-        },
-    });
-
-    let result = "";
-    response.results.forEach((page, index) => {
-        const name = page.properties.Name.title[0]?.text?.content;
-        const description =
-            page.properties.Description.rich_text[0]?.text?.content;
-
-        let text = "";
-        if (description) {
-            text = `${index + 1}. ${name} (${description})`;
-        } else {
-            text = `${index + 1}. ${name}`;
-        }
-        result += text + "\n";
-    });
-
-    return result;
-};
-
-module.exports.addToDoList = async (dataArray) => {
-    try {
-        // Tạo mảng các promises
-        const promises = dataArray.map((data) =>
-            axios.post(
-                `https://api.notion.com/v1/pages`,
-                {
-                    parent: { database_id: config.toDoListDatabaseId },
-                    properties: {
-                        Priority: {
-                            id: "%3DJ%5Co",
-                            type: "status",
-                            status: {
-                                id: "N\\O|",
-                                name: "Medium",
-                                color: "blue",
-                            },
-                        },
-                        Date: {
-                            id: "JQ%5CO",
-                            type: "date",
-                            date: {
-                                start: data[1],
-                                end: null,
-                                time_zone: null,
-                            },
-                        },
-                        // "Courses": {
-                        //     "id": "M%5CJU",
-                        //     "type": "relation",
-                        //     "relation": [
-                        //         {
-                        //             "id": "3e4c4a43-0126-454e-8760-86c2437d1b85"
-                        //         }
-                        //     ],
-                        //     "has_more": false
-                        // },
-                        Checkbox: {
-                            id: "fUEg",
-                            type: "checkbox",
-                            checkbox: false,
-                        },
-                        Description: {
-                            id: "xZYN",
-                            type: "rich_text",
-                            rich_text: [
-                                {
-                                    type: "text",
-                                    text: {
-                                        content: data[2],
-                                        link: null,
-                                    },
-                                    annotations: {
-                                        bold: false,
-                                        italic: false,
-                                        strikethrough: false,
-                                        underline: false,
-                                        code: false,
-                                        color: "default",
-                                    },
-                                    plain_text: data[2],
-                                    href: null,
-                                },
-                            ],
-                        },
-                        Deleted: {
-                            id: "zT%5B%7C",
-                            type: "status",
-                            status: {
-                                id: "7633e622-87bf-4013-8be5-1b3b9be67695",
-                                name: "false",
-                                color: "default",
-                            },
-                        },
-                        Name: {
-                            id: "title",
-                            type: "title",
-                            title: [
-                                {
-                                    type: "text",
-                                    text: {
-                                        content: data[0],
-                                        link: null,
-                                    },
-                                    annotations: {
-                                        bold: false,
-                                        italic: false,
-                                        strikethrough: false,
-                                        underline: false,
-                                        code: false,
-                                        color: "default",
-                                    },
-                                    plain_text: data[0],
-                                    href: null,
-                                },
-                            ],
-                        },
-                    },
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${config.notionToken}`,
-                        accept: "application/json",
-                        "Notion-Version": "2022-06-28",
-                        "content-type": "application/json",
-                    },
-                },
-            ),
-        );
-
-        // Chờ tất cả các promises hoàn thành
-        try {
-            await Promise.all(promises);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    } catch (error) {
-        console.error(
-            "Error creating pages:",
-            error.response ? error.response.data : error.message,
-        );
-        return false;
-    }
-};
+// module.exports.getTodoList = async (ctx) => {
+//     const databaseId = config.toDoListDatabaseId;
+//     const today = new Date().toISOString().split("T")[0];
+//
+//     const response = await notion.databases.query({
+//         database_id: databaseId,
+//         filter: {
+//             property: "Date",
+//             date: {
+//                 equals: today,
+//             },
+//         },
+//     });
+//
+//     let result = "";
+//     response.results.forEach((page, index) => {
+//         const name = page.properties.Name.title[0]?.text?.content;
+//         const description =
+//             page.properties.Description.rich_text[0]?.text?.content;
+//
+//         let text = "";
+//         if (description) {
+//             text = `${index + 1}. ${name} (${description})`;
+//         } else {
+//             text = `${index + 1}. ${name}`;
+//         }
+//         result += text + "\n";
+//     });
+//
+//     return result;
+// };
+//
+// module.exports.addToDoList = async (dataArray) => {
+//     try {
+//         // Tạo mảng các promises
+//         const promises = dataArray.map((data) =>
+//             axios.post(
+//                 `https://api.notion.com/v1/pages`,
+//                 {
+//                     parent: { database_id: config.toDoListDatabaseId },
+//                     properties: {
+//                         Priority: {
+//                             id: "%3DJ%5Co",
+//                             type: "status",
+//                             status: {
+//                                 id: "N\\O|",
+//                                 name: "Medium",
+//                                 color: "blue",
+//                             },
+//                         },
+//                         Date: {
+//                             id: "JQ%5CO",
+//                             type: "date",
+//                             date: {
+//                                 start: data[1],
+//                                 end: null,
+//                                 time_zone: null,
+//                             },
+//                         },
+//                         // "Courses": {
+//                         //     "id": "M%5CJU",
+//                         //     "type": "relation",
+//                         //     "relation": [
+//                         //         {
+//                         //             "id": "3e4c4a43-0126-454e-8760-86c2437d1b85"
+//                         //         }
+//                         //     ],
+//                         //     "has_more": false
+//                         // },
+//                         Checkbox: {
+//                             id: "fUEg",
+//                             type: "checkbox",
+//                             checkbox: false,
+//                         },
+//                         Description: {
+//                             id: "xZYN",
+//                             type: "rich_text",
+//                             rich_text: [
+//                                 {
+//                                     type: "text",
+//                                     text: {
+//                                         content: data[2],
+//                                         link: null,
+//                                     },
+//                                     annotations: {
+//                                         bold: false,
+//                                         italic: false,
+//                                         strikethrough: false,
+//                                         underline: false,
+//                                         code: false,
+//                                         color: "default",
+//                                     },
+//                                     plain_text: data[2],
+//                                     href: null,
+//                                 },
+//                             ],
+//                         },
+//                         Deleted: {
+//                             id: "zT%5B%7C",
+//                             type: "status",
+//                             status: {
+//                                 id: "7633e622-87bf-4013-8be5-1b3b9be67695",
+//                                 name: "false",
+//                                 color: "default",
+//                             },
+//                         },
+//                         Name: {
+//                             id: "title",
+//                             type: "title",
+//                             title: [
+//                                 {
+//                                     type: "text",
+//                                     text: {
+//                                         content: data[0],
+//                                         link: null,
+//                                     },
+//                                     annotations: {
+//                                         bold: false,
+//                                         italic: false,
+//                                         strikethrough: false,
+//                                         underline: false,
+//                                         code: false,
+//                                         color: "default",
+//                                     },
+//                                     plain_text: data[0],
+//                                     href: null,
+//                                 },
+//                             ],
+//                         },
+//                     },
+//                 },
+//                 {
+//                     headers: {
+//                         Authorization: `Bearer ${config.notionToken}`,
+//                         accept: "application/json",
+//                         "Notion-Version": "2022-06-28",
+//                         "content-type": "application/json",
+//                     },
+//                 },
+//             ),
+//         );
+//
+//         // Chờ tất cả các promises hoàn thành
+//         try {
+//             await Promise.all(promises);
+//             return true;
+//         } catch (e) {
+//             return false;
+//         }
+//     } catch (error) {
+//         console.error(
+//             "Error creating pages:",
+//             error.response ? error.response.data : error.message,
+//         );
+//         return false;
+//     }
+// };

@@ -35,7 +35,7 @@ bot.command("confession", middleware.auth, textHandlers.addConfession);
 
 bot.command("get_confession", middleware.auth, textHandlers.getConfession);
 
-bot.command("add", middleware.auth, textHandlers.addToDoList);
+// bot.command("add", middleware.auth, textHandlers.addToDoList);
 
 // bot.command("get_to_do_list", middleware.auth, textHandlers.addToDoList);
 
