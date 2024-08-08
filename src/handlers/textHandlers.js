@@ -21,7 +21,6 @@ module.exports.message = async (ctx) => {
         // } else if (ctx.session.addToDoList) {
         //     await addToDoListService(ctx, message);
         } else if(ctx.session.getConfession) {
-            await ctx.reply(config.passwordConfession);
             if(message === config.passwordConfession) {
                 const text = await getConfessionService();
                 const sentMessage = await ctx.reply(text, {

@@ -39,14 +39,23 @@ module.exports = async () => {
                 let time = moment(
                     item.date,
                     "ddd MMM DD YYYY HH:mm:ss [GMT]Z",
-                ).format("HH:mm");
+                ).format("HH:mm")
+
                 if (item.title && item.content) {
                     messages.push(
-                        `<b>${date}\n\n${time} - ${item.title}</b>\n${item.content}`,
+                        `${date}\n\n${time} - ${item.title}\n${item.content}`,
                     );
                 } else {
-                    messages.push(`<b>${date}\n\n${time}</b>\n${item.content}`);
+                    messages.push(`${date}\n\n${time}\n${item.content}`);
                 }
+
+                // if (item.title && item.content) {
+                //     messages.push(
+                //         `<b>${date}\n\n${time} - ${item.title}</b>\n${item.content}`,
+                //     );
+                // } else {
+                //     messages.push(`<b>${date}\n\n${time}</b>\n${item.content}`);
+                // }
             });
         }
 
