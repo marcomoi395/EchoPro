@@ -6,4 +6,4 @@ module.exports = async () => {
     if (record?.chat.length > 0)
         return record.chat;
     else return "";
-};  
+};
